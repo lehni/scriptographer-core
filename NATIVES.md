@@ -12,7 +12,7 @@ Errors are the realm's: `TypeError`, `RangeError`, or a `DOMException` of the na
 4. The runtime's own globals, after the bundle: `setTimeout`, `setInterval`, `clearTimeout`, `clearInterval`, `requestAnimationFrame`, `cancelAnimationFrame`, and `structuredClone` (see Clone).
 5. Per script: `setScript(file, directory, preferences)`, which gives it `script` (see below), and `setLocation(href)`, the script's file URL.
 
-Scripts run through the bundle's `executeScript(scope, source, url, load)`, which keeps the handlers they export, `onStartup`, `onShutdown`, `onStop`, `onAppActivate`, `onAppDeactivate` and `onEditOptions`; the app calls them with `callHandler(name)`. A script runs in a realm of its own.
+Scripts run through the bundle's `executeScript(scope, source, url)`, with `url` the script's file URL (or a name, for code without a file), which loads what they `import` (see Modules) and keeps the handlers they export, `onStartup`, `onShutdown`, `onStop`, `onAppActivate`, `onAppDeactivate` and `onEditOptions`; the app calls them with `callHandler(name)`. A script runs in a realm of its own.
 
 ## Required as the bundle loads
 
@@ -23,6 +23,7 @@ Scripts run through the bundle's `executeScript(scope, source, url, load)`, whic
 
 - `now()`: milliseconds since the realm started.
 - `random(length)`: that many random bytes, 65536 at most.
+- `readModule(url)`: the text of the module at a `file:`, `http:` or `https:` URL, synchronously, as `import` needs it; downloads may come from the app's cache. Throws when it can't.
 - `evaluate(source, url)`, optional: what `source` evaluates to as a script of `url`, so that stack traces name the scripts' code in their files.
 - `encoding.encode(text)`: UTF-8. `encoding.decode(bytes, fatal)`: UTF-8 as browsers decode it, invalid sequences as U+FFFD, or `null` when `fatal`.
 - `ask(question)`, synchronous; it may return a Promise:
@@ -99,3 +100,9 @@ Structured serialization, which messages and `structuredClone()` use: primitives
 - Running a script stops the others, unless they set `script.keepAlive`, and leaves the tool's script running. Stopping calls `onStop`.
 - `script.preferences` is kept after each unit of work, when it changed.
 - A script that works for longer than 5 seconds is asked about: Wait asks again later, Stop ends it.
+
+## Modules
+
+- `import` resolves its specifier against the URL of the importing code, the script's for its own imports, and reads the module with `readModule(url)`; an `http:` or `https:` one shows in the console.
+- A `.pjs` module is PaperScript, with operator overloading, any other plain JavaScript, unless the import says which with `with { type: 'paperscript' }` or `with { type: 'javascript' }`.
+- Each module runs once per script, per kind, in the script's scope; a cycle throws, and one that failed runs again the next time it's imported.
