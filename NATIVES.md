@@ -10,7 +10,7 @@ Errors are the realm's: `TypeError`, `RangeError`, or a `DOMException` of the na
 2. acorn (`self.acorn`, which PaperScript prefers), then `vendor/paper-hosted.js`.
 3. `__scriptographer`, then `dist/scriptographer.js`.
 4. The runtime's own globals, after the bundle: `setTimeout`, `setInterval`, `clearTimeout`, `clearInterval`, `requestAnimationFrame`, `cancelAnimationFrame`, and `structuredClone` (see Clone).
-5. Per script: `script` (`file` and `directory` as `LocalFile`s, `keepAlive`, `preferences` through `Base.importJSON`), and `setLocation(href)`, the script's file URL.
+5. Per script: `setScript(file, directory, preferences)`, which gives it `script` (see below), and `setLocation(href)`, the script's file URL.
 
 Scripts run through `PaperScript.execute(source, scope, { url, load, handlers })` with the handlers `onStartup`, `onShutdown`, `onStop`, `onAppActivate`, `onAppDeactivate` and `onEditOptions`, which the app calls. A script runs in a realm of its own.
 
@@ -84,6 +84,7 @@ Each `OffscreenCanvas`, `ImageBitmap`, `Path2D`, `CanvasGradient` and `CanvasPat
 - `takePalettes()`: the palettes new or changed since the last call, `{ id, title, components }`. `hasPalettes()`, which keeps a script running. `handlePaletteEvent(id, 'change' | 'click' | 'close', name, value)`.
 - `dispatchKey(type, init)`, `hasKeyListeners()`.
 - `getSelectedKeys(project)`: the keys of the selected items, as JSON.
+- `setScript(file, directory, preferences)`: the global `script`: `file` and `directory` as `LocalFile`s, `keepAlive`, and `preferences` from their JSON (Paper.js's, so Colors and Points come back). `getPreferences()`: their JSON, which the app keeps once a unit of work is done, when it changed. `keepsAlive()`: whether the script set `script.keepAlive`.
 - `setLocation(href)`, `setupWorker(name, isShared)` (gives what receives messages or connected ports), `makePort(number)`, `getBytes(blob)`, `getGeometryValues(object)`, `notifyRejections`.
 - `watchEffects(Effect)`, `applyEffect(scope, type, parameters, art, key)` (VectorCraft).
 
