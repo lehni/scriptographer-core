@@ -1,5 +1,6 @@
 import { inject } from './define.js'
 import { LocalFile } from './local-file.js'
+import { natives } from './natives.js'
 
 // The global `script` a running script gets: its file and folder as
 // `LocalFile`s (`null` without one, as on the web, or for the console),
@@ -44,11 +45,14 @@ const handlerNames = [
 const handlers = {}
 
 // Runs the script's PaperScript in its scope, and keeps the handlers it
-// exports; one with top-level await exports them once it's done.
+// exports; one with top-level await exports them once it's done. The app's
+// `evaluate()` names the script's code in stack traces, where the engine
+// doesn't for code from `Function()`.
 export function executeScript(scope, source, url, load) {
   const exported = scope.PaperScript.execute(source, scope, {
     url,
     load,
+    evaluate: natives.evaluate,
     handlers: handlerNames
   })
   if (typeof exported?.then === 'function') {

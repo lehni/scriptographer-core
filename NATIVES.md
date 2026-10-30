@@ -23,6 +23,7 @@ Scripts run through the bundle's `executeScript(scope, source, url, load)`, whic
 
 - `now()`: milliseconds since the realm started.
 - `random(length)`: that many random bytes, 65536 at most.
+- `evaluate(source, url)`, optional: what `source` evaluates to as a script of `url`, so that stack traces name the scripts' code in their files.
 - `encoding.encode(text)`: UTF-8. `encoding.decode(bytes, fatal)`: UTF-8 as browsers decode it, invalid sequences as U+FFFD, or `null` when `fatal`.
 - `ask(question)`, synchronous; it may return a Promise:
   - `{ type: 'alert' | 'confirm', title, message }`: `true` for OK, `false`/`null` otherwise.
