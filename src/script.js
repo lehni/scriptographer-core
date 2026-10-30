@@ -29,3 +29,44 @@ export function getPreferences() {
 export function keepsAlive() {
   return globalThis.script?.keepAlive === true
 }
+
+// The handlers scripts export, which the runtime calls: as the app starts
+// and quits, as the script stops, as the app comes to the front or leaves
+// it, and as the user asks for the tool's options.
+const handlerNames = [
+  'onStartup',
+  'onShutdown',
+  'onStop',
+  'onAppActivate',
+  'onAppDeactivate',
+  'onEditOptions'
+]
+const handlers = {}
+
+// Runs the script's PaperScript in its scope, and keeps the handlers it
+// exports; one with top-level await exports them once it's done.
+export function executeScript(scope, source, url, load) {
+  const exported = scope.PaperScript.execute(source, scope, {
+    url,
+    load,
+    handlers: handlerNames
+  })
+  if (typeof exported?.then === 'function') {
+    exported.then(
+      exported => Object.assign(handlers, exported),
+      err => reportError(err)
+    )
+  } else {
+    Object.assign(handlers, exported)
+  }
+}
+
+// Calls the handler the script exported: whether it has it.
+export function callHandler(name) {
+  const handler = handlers[name]
+  if (typeof handler === 'function') {
+    handler()
+    return true
+  }
+  return false
+}

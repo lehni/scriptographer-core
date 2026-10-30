@@ -38,7 +38,13 @@ import {
   hasPalettes,
   takePalettes
 } from './palette.js'
-import { getPreferences, keepsAlive, setScript } from './script.js'
+import {
+  callHandler,
+  executeScript,
+  getPreferences,
+  keepsAlive,
+  setScript
+} from './script.js'
 import { Storage, createStorage } from './storage.js'
 import { StorageManager } from './storage-manager.js'
 import { URL, URLSearchParams } from './url.js'
@@ -202,9 +208,15 @@ setupKeys()
 Object.assign(natives, { dispatchKey, hasKeyListeners })
 // What it reads a project's selection with, in one call, as it may be large:
 Object.assign(natives, { getSelectedKeys })
-// What it sets up the script's `script` with, and reads of it once the
-// script's work is done:
-Object.assign(natives, { setScript, getPreferences, keepsAlive })
+// What it runs scripts with, sets up their `script` with, reads of it once
+// the script's work is done, and calls their handlers with:
+Object.assign(natives, {
+  executeScript,
+  callHandler,
+  setScript,
+  getPreferences,
+  keepsAlive
+})
 
 function getSelectedKeys(project) {
   return JSON.stringify(

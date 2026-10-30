@@ -12,7 +12,7 @@ Errors are the realm's: `TypeError`, `RangeError`, or a `DOMException` of the na
 4. The runtime's own globals, after the bundle: `setTimeout`, `setInterval`, `clearTimeout`, `clearInterval`, `requestAnimationFrame`, `cancelAnimationFrame`, and `structuredClone` (see Clone).
 5. Per script: `setScript(file, directory, preferences)`, which gives it `script` (see below), and `setLocation(href)`, the script's file URL.
 
-Scripts run through `PaperScript.execute(source, scope, { url, load, handlers })` with the handlers `onStartup`, `onShutdown`, `onStop`, `onAppActivate`, `onAppDeactivate` and `onEditOptions`, which the app calls. A script runs in a realm of its own.
+Scripts run through the bundle's `executeScript(scope, source, url, load)`, which keeps the handlers they export, `onStartup`, `onShutdown`, `onStop`, `onAppActivate`, `onAppDeactivate` and `onEditOptions`; the app calls them with `callHandler(name)`. A script runs in a realm of its own.
 
 ## Required as the bundle loads
 
