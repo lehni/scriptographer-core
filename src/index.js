@@ -30,6 +30,7 @@ import * as globalScope from './global-scope.js'
 import * as streams from './streams.js'
 import { notifyRejections, reportRejections } from './rejections.js'
 import { FontFace, FontFaceSet } from './font-face.js'
+import { formatError } from './format-error.js'
 import { LocalFile } from './local-file.js'
 import { WorkerLocation, setLocation } from './location.js'
 import { Lock, LockManager } from './locks.js'
@@ -221,6 +222,8 @@ Object.assign(natives, {
   getPreferences,
   keepsAlive
 })
+// What it writes the errors of the scripts' runs with, as the console does:
+Object.assign(natives, { formatError })
 
 function getSelectedKeys(project) {
   return JSON.stringify(
