@@ -45,7 +45,9 @@ const handlerNames = [
 const handlers = {}
 
 // Runs the script's PaperScript, at `url`, in its scope, and keeps the
-// handlers it exports; one with top-level await exports them once it's done.
+// handlers it exports. One with top-level await exports them once it's done:
+// then it returns a promise of that, and the app decides what its failure
+// means.
 export function executeScript(scope, source, url) {
   const exported = scope.PaperScript.execute(
     source,
@@ -53,13 +55,11 @@ export function executeScript(scope, source, url) {
     getOptions(scope, url, true, handlerNames)
   )
   if (typeof exported?.then === 'function') {
-    exported.then(
-      exported => Object.assign(handlers, exported),
-      err => reportError(err)
-    )
-  } else {
-    Object.assign(handlers, exported)
+    return exported.then(exported => {
+      Object.assign(handlers, exported)
+    })
   }
+  Object.assign(handlers, exported)
 }
 
 // Calls the handler the script exported: whether it has it.
