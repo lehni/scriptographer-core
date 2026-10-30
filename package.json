@@ -2,6 +2,7 @@
   "name": "scriptographer-core",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "description": "What Scriptographer's scripts see, written in JavaScript, shared by its hosts (VectorCraft, Glyphs): bundled into dist/, which their runtimes load",
   "scripts": {
     "build": "node build.js",
