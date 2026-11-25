@@ -58,7 +58,7 @@ By path; a relative path is from the script's folder.
 - `locks.request(name, exclusive, ifAvailable, steal, receive)`: `[number, 'granted' | 'waiting' | 'unavailable']`; later `receive('granted' | 'stolen')`. `locks.release(number)`, `locks.cancel(number)`, `locks.query()`: `{ held, pending }` of `{ name, mode, clientId }`. Across all scripts; a stopped script lets go of its locks.
 - `port.channel()`: two numbers. `port.post(number, message, ports, numbers, buffers)`, `port.start(number, receive)`, `port.close(number)`. A port sent in a transfer list moves to the realm that receives it, which numbers it with `makePort()`.
 - `worker.start(url, name, receive)`, `worker.post(number, data, ports, numbers, buffers)`, `worker.terminate(number)`, `worker.connect(url, name, port, onError)`, and in a worker `worker.self.postMessage(data, ports, numbers, buffers)`, `worker.self.close()`, `worker.self.importScripts(...paths)`. A worker runs a classic script on a thread of its own, in a realm with the same APIs and Paper.js, but no document; `receive` gets `{ type, data, ports }` or `{ type: 'error', message }`. A shared worker is one per URL and name for all scripts.
-- `effects.define(type, label, parametersJSON)`, `effects.forget(type)`: the effects a script defines (VectorCraft).
+- `effects.define(type, label, parametersJSON, interactive)`, `effects.forget(type)`: the effects a script defines (VectorCraft); `interactive` when the effect draws during the app's own interactions too, as the user drags or edits the object, and not only once they end.
 - `dom()`, optional: a linkedom window.
 
 ## Canvas

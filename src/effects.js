@@ -12,7 +12,8 @@ export function watchEffects(Effect) {
     natives.effects.define(
       effect.type,
       effect.label,
-      JSON.stringify(effect.parameters)
+      JSON.stringify(effect.parameters),
+      effect.interactive === true
     )
     return add.call(this, effect)
   }
